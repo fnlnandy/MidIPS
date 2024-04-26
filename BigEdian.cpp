@@ -21,6 +21,16 @@ u8 BigEdian::readU8()
     return fgetc(_fileBuffer);
 }
 
+u8 *BigEdian::readBytes(const size_t &length)
+{
+    u8 *readArray = new u8[length];
+
+    for (size_t i = 0; i < length; i++)
+        readArray[i] = readU8();
+
+    return readArray;
+}
+
 u16 BigEdian::readU16()
 {
     u16 retVal = readU8();

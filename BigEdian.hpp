@@ -13,6 +13,7 @@ public:
     BigEdian(std::FILE *file);
     ~BigEdian();
     u8 readU8();
+    u8 *readBytes(const size_t &length);
     u16 readU16();
     u32 readU24();
     u32 readU32();
