@@ -3,7 +3,7 @@ IPSPATCHER := ipspatcher$(EXE)
 CXX      := g++
 CXXFLAGS := -std=c++11 -Wall -Werror -O2
 
-CPPFILES := IPSPatcher.cpp
+CPPFILES := IPSPatcher.cpp BigEdian.cpp
 OFILES   := $(CPPFILES:%.cpp=%.o)
 
 all: $(IPSPATCHER)
