@@ -1,3 +1,4 @@
 ipspatcher*
 *.o
 .vscode
+*.bin
