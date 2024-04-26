@@ -89,6 +89,11 @@ void BigEdian::writeU32(const u32 &toWrite)
     writeU16(toWrite & BITS_IN(u16));
 }
 
+void BigEdian::flush()
+{
+    fflush(_fileBuffer);
+}
+
 bool BigEdian::isEnd()
 {
     return (feof(_fileBuffer) == 1);

@@ -22,6 +22,7 @@ public:
     void writeU16(const u16 &toWrite);
     void writeU24(const u32 &toWrite);
     void writeU32(const u32 &toWrite);
+    void flush();
     bool isEnd();
 };
 
