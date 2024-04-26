@@ -17,6 +17,11 @@ public:
     u16 readU16();
     u32 readU24();
     u32 readU32();
+    void writeU8(const u8 &toWrite);
+    void writeBytes(const u8 *toWrite, const size_t &length);
+    void writeU16(const u16 &toWrite);
+    void writeU24(const u32 &toWrite);
+    void writeU32(const u32 &toWrite);
     bool isEnd();
 };
 
