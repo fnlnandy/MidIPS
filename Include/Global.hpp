@@ -9,6 +9,11 @@
         exit(1);                  \
     }
 
+#define INFO(msg)                             \
+    {                                         \
+        std::cout << "INFO: " << msg << "\n"; \
+    }
+
 #define BITS_IN(dataType) (sizeof(dataType) * 8)
 
 #ifndef NDEBUG
