@@ -2,21 +2,25 @@ IPSPATCHER := ipspatcher$(EXE)
 
 SOURCEDIR  := Source
 INCLUDEDIR := Include
+BUILDDIR   := Build
 
 CXX      := g++
 CXXFLAGS := -std=c++11 -Wall -Werror -O2 -I$(INCLUDEDIR)
 
 CPPFILES := $(wildcard $(SOURCEDIR)/*.cpp)
-OFILES   := $(CPPFILES:%.cpp=%.o)
+OFILES   := $(CPPFILES:$(SOURCEDIR)/%.cpp=$(BUILDDIR)/%.o)
 
-all: $(IPSPATCHER)
+all: mkdirs $(IPSPATCHER)
 
 clean:
-	rm -rf *.o
+	rm -rf $(BUILDDIR)
 	rm -f $(IPSPATCHER)
+
+mkdirs:
+	mkdir -p $(BUILDDIR)
 
 $(IPSPATCHER): $(OFILES)
 	$(CXX) $(CXXFLAGS) $(OFILES) -o $@
 
-%.o: %.cpp
+$(BUILDDIR)/%.o: $(SOURCEDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
