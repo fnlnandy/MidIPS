@@ -1,12 +1,14 @@
 #include "Global.hpp"
 #include "BigEdian.hpp"
 
-BigEdian::BigEdian(std::FILE *file)
+BigEdian::BigEdian(const std::string &fileName, const std::string &mode)
 {
-    if (file == NULL)
-        FATAL_ERROR("Trying to pass NULL to BigEdian().");
+    _fileBuffer = fopen(fileName.c_str(), mode.c_str());
 
-    _fileBuffer = file;
+    if (_fileBuffer == NULL)
+        FATAL_ERROR("Unable to open '" << fileName << "' for reading.");
+
+    _fileName = fileName;
     fseek(_fileBuffer, 0, SEEK_END);
     _size = ftell(_fileBuffer);
     rewind(_fileBuffer);
@@ -20,7 +22,7 @@ BigEdian::~BigEdian()
 u8 BigEdian::readU8()
 {
     if (isEnd())
-        return 0x00;
+        FATAL_ERROR("Reached end of file: '" << _fileName << "'.");
 
     return fgetc(_fileBuffer);
 }

@@ -3,16 +3,18 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <string>
 #include "Types.hpp"
 
 class BigEdian
 {
 private:
     std::FILE *_fileBuffer;
+    std::string _fileName;
     size_t _size;
 
 public:
-    BigEdian(std::FILE *file);
+    BigEdian(const std::string &fileName, const std::string &mode);
     ~BigEdian();
     u8 readU8();
     u8 *readBytes(const size_t &length);
