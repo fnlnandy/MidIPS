@@ -24,6 +24,7 @@ public:
     u16 count() const;
     std::vector<u8> *diffBytes() const;
 
+    void asIPS(BigEdian *ipsFile);
     static Diff makeDiff(BigEdian *source, BigEdian *target);
 };
 

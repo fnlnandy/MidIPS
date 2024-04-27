@@ -56,6 +56,22 @@ std::vector<u8> *Diff::diffBytes() const
     return _diffBytes;
 }
 
+void Diff::asIPS(BigEdian *ipsFile)
+{
+    ipsFile->writeU24(_offset);
+    ipsFile->writeU16(_length);
+
+    if (_length == 0)
+    {
+        ipsFile->writeU16(_count);
+        ipsFile->writeU8(_diffBytes->at(0));
+    }
+    else
+    {
+        ipsFile->writeBytes(_diffBytes->data(), _length);
+    }
+}
+
 Diff Diff::makeDiff(BigEdian *source, BigEdian *target)
 {
     if (source->isEnd() || target->isEnd())
