@@ -74,6 +74,8 @@ void Hunk::write(BigEdian *destination)
 
         FATAL_ERROR("Specified offset: " << offsetBuf << " is bigger than file size: " << destSize << ".");
     }
+    if ((_length == 0 && _count == 0) || _bytes == nullptr)
+        return;
 
     destination->seek(_offset);
 
@@ -93,6 +95,9 @@ void Hunk::write(BigEdian *destination)
 
 void Hunk::asIPS(BigEdian *destination)
 {
+    if ((_length == 0 && _count == 0) || _bytes == nullptr)
+        return;
+
     destination->writeU24(_offset);
     destination->writeU16(_length);
 
