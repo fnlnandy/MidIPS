@@ -1,20 +1,19 @@
 #ifndef GUARD_BIG_EDIAN_HPP
 #define GUARD_BIG_EDIAN_HPP
 
-#include <cstdio>
-#include <cstdlib>
+#include <fstream>
 #include <string>
 #include "Types.hpp"
 
 class BigEdian
 {
 private:
-    std::FILE *_fileBuffer;
+    std::fstream _fileBuffer;
     std::string _fileName;
     size_t _size;
 
 public:
-    BigEdian(const std::string &fileName, const std::string &mode);
+    BigEdian(const std::string &fileName, const std::ios_base::openmode &mode);
     ~BigEdian();
     u8 readU8();
     u8 *readBytes(const size_t &length);
