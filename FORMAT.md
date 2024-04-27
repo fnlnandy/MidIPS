@@ -1,14 +1,12 @@
-1. Header
-The file starts with a "magic header":
-`50 41 54 43 48`
+## Header
+The patcher expects the IPS file to start with the common header:
+```
+50 41 54 43 48
+```
+Which translates to `"PATCH"`, apparently.
 
-2. Data
-The data's structure is pretty simple:
-* Offset  = `0x3` bytes
-* Length  = `0x2` bytes
-* Count   = `0x2` bytes\*
-* Byte(s) = `0x1` \* `Length` bytes *or* `0x1`\*\* byte
-
-\*: Is only read if `Length` is set to 0.
-
-\*\*: Only `0x1` byte is expected if `Length` is `0`, which will serve as the filler.
+## Data format
+The data is laid out like so:
+- The first `0x3` bytes are designing the offset of insertion, which is 24 bits, making it impossible to apply changes past a 16MB file.
+- The second `0x2` bytes are designing the length of the data, the byte array. If they're set to `0`, the next `0x2` bytes are interpreted as a count (for filling).
+- The last `0x1 * Length` bytes represent the raw data to write, if `Length` is `0`, then only the first byte is read to fill `0x1 * Count` bytes.
