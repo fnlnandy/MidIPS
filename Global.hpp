@@ -9,4 +9,6 @@
         exit(1);                  \
     }
 
+#define BITS_IN(dataType) (sizeof(dataType) * 8)
+
 #endif // GUARD_GLOBAL_HPP

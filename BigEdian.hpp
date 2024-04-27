@@ -30,14 +30,4 @@ public:
     bool isEnd();
 };
 
-enum
-{
-    BITS_u8 = 8,
-    BITS_u16 = 16,
-    BITS_u24 = 24,
-    BITS_u32 = 32
-};
-
-#define BITS_IN(x) (BITS_##x)
-
 #endif // GUARD_BIG_EDIAN_HPP
