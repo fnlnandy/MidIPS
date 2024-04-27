@@ -26,6 +26,9 @@ Hunk::Hunk(Hunk &&hunk)
 
 Hunk &Hunk::operator=(const Hunk &source)
 {
+    if (&source == this)
+        return *this;
+
     _offset = source.offset();
     _length = source.length();
     _count = source.count();
