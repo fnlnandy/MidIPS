@@ -11,6 +11,7 @@ using i32 = signed int;
 
 #define U8_MAX 0xFF
 #define U16_MAX 0xFFFF
-#define U32_MAX 0xFFFF
+#define U24_MAX 0xFFFFFFF
+#define U32_MAX 0xFFFFFFFF
 
 #endif // GUARD_TYPES_HPP
