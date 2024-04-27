@@ -1,9 +1,12 @@
 IPSPATCHER := ipspatcher$(EXE)
 
-CXX      := g++
-CXXFLAGS := -std=c++11 -Wall -Werror -O2
+SOURCEDIR  := Source
+INCLUDEDIR := Include
 
-CPPFILES := IPSPatcher.cpp BigEdian.cpp Hunk.cpp
+CXX      := g++
+CXXFLAGS := -std=c++11 -Wall -Werror -O2 -I$(INCLUDEDIR)
+
+CPPFILES := $(wildcard $(SOURCEDIR)/*.cpp)
 OFILES   := $(CPPFILES:%.cpp=%.o)
 
 all: $(IPSPATCHER)
