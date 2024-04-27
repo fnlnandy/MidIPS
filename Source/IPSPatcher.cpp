@@ -70,7 +70,7 @@ static int createIPSPatch(const std::vector<std::string> *args)
 
     BigEdian sourceFile = {sourceFileName, std::ios::in | std::ios::out | std::ios::binary};
     BigEdian targetFile = {targetFileName, std::ios::in | std::ios::out | std::ios::binary};
-    BigEdian outputFile = {outputFileName, std::ios::in | std::ios::out | std::ios::binary};
+    BigEdian outputFile = {outputFileName, std::ios::out | std::ios::binary};
 
     // Mandatory header for the IPS File
     outputFile.writeBytes(gMagicHeader, gMagicHeaderLength);
@@ -79,10 +79,11 @@ static int createIPSPatch(const std::vector<std::string> *args)
     {
         Hunk diffHunk = Hunk::fromDiff(&sourceFile, &targetFile);
 
-        // diffHunk.asIPS(&outputFile);
+        diffHunk.asIPS(&outputFile);
         std::cout << diffHunk << "\n";
     }
 
+    outputFile.flush();
     return 0;
 }
 
@@ -105,7 +106,7 @@ static int applyIPSPatch(const std::vector<std::string> *args)
     while (!IPSFile.isEnd())
     {
         Hunk toApply = Hunk::makeHunk(&IPSFile);
-        // toApply.write(&fileToApplyOn);
+        toApply.write(&fileToApplyOn);
 
         std::cout << toApply << "\n";
     }
