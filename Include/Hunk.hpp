@@ -28,7 +28,7 @@ public:
 
     void write(BigEdian *destination);
     void asIPS(BigEdian *destination);
-    static Hunk makeHunk(BigEdian *ipsParser);
+    static Hunk fromIPS(BigEdian *ipsParser);
     static Hunk fromDiff(BigEdian *source, BigEdian *target);
 };
 

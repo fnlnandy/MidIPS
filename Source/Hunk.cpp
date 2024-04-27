@@ -107,7 +107,7 @@ void Hunk::asIPS(BigEdian *destination)
     }
 }
 
-Hunk Hunk::makeHunk(BigEdian *ipsParser)
+Hunk Hunk::fromIPS(BigEdian *ipsParser)
 {
     u32 offset = ipsParser->readU24();
     u16 length = ipsParser->readU16();
