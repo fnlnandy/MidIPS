@@ -105,6 +105,11 @@ void BigEdian::seek(const size_t offset)
     fseek(_fileBuffer, offset, SEEK_SET);
 }
 
+size_t BigEdian::tell()
+{
+    return static_cast<size_t>(ftell(_fileBuffer));
+}
+
 size_t BigEdian::size()
 {
     return _size;

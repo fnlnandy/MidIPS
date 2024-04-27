@@ -28,6 +28,7 @@ public:
     void writeU32(const u32 &toWrite);
     void flush();
     void seek(const size_t offset);
+    size_t tell();
     size_t size();
     bool isEnd();
 };
