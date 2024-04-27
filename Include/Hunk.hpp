@@ -2,6 +2,7 @@
 #define GUARD_HUNK_HPP
 
 #include <iostream>
+#include <vector>
 #include "Types.hpp"
 #include "BigEdian.hpp"
 
@@ -11,21 +12,24 @@ private:
     u32 _offset;
     u16 _length;
     u16 _count;
-    u8 *_bytes;
+    std::vector<u8> *_bytes;
 
 public:
-    Hunk(const u32 offset, const u16 length, const u16 count, u8 *bytes);
+    Hunk(const u32 offset, const u16 length, const u16 count, std::vector<u8> *bytes);
     Hunk(Hunk &hunk);
     Hunk(Hunk &&hunk);
+    ~Hunk();
     Hunk &operator=(const Hunk &source);
 
     u32 offset() const;
     u16 length() const;
     u16 count() const;
-    u8 *bytes() const;
+    std::vector<u8> *bytes() const;
 
     void write(BigEdian *destination);
+    void asIPS(BigEdian *destination);
     static Hunk makeHunk(BigEdian *ipsParser);
+    static Hunk fromDiff(BigEdian *source, BigEdian *target);
 };
 
 std::ostream &operator<<(std::ostream &out, Hunk &hunk);
