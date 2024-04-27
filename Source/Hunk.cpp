@@ -76,6 +76,11 @@ void Hunk::write(BigEdian *destination)
     }
     if ((_length == 0 && _count == 0) || _bytes == nullptr)
         return;
+    if (_offset > U24_MAX)
+    {
+        INFO("The patch *will not* consider data after 0xFFFFFF, skipping.");
+        return;
+    }
 
     destination->seek(_offset);
 
@@ -97,6 +102,11 @@ void Hunk::asIPS(BigEdian *destination)
 {
     if ((_length == 0 && _count == 0) || _bytes == nullptr)
         return;
+    if (_offset > U24_MAX)
+    {
+        INFO("The patch *will not* consider data after 0xFFFFFF, skipping.");
+        return;
+    }
 
     destination->writeU24(_offset);
     destination->writeU16(_length);
