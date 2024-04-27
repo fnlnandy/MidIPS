@@ -56,7 +56,15 @@ u8 *Hunk::bytes() const
 void Hunk::write(BigEdian *destination)
 {
     if (_offset >= destination->size())
-        FATAL_ERROR("Hunk offset is bigger than the file's size.");
+    {
+        char offsetBuf[10];
+        char destSize[10];
+
+        sprintf(offsetBuf, "0x%X", _offset);
+        sprintf(destSize, "0x%lX", destination->size());
+
+        FATAL_ERROR("Specified offset: " << offsetBuf << " is bigger than file size: " << destSize << ".");
+    }
 
     destination->seek(_offset);
 
