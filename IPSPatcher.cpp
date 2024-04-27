@@ -90,10 +90,10 @@ static int applyIPSPatch(const std::vector<std::string> *args)
 
     while (!IPSFile.isEnd())
     {
-        Hunk test = Hunk::makeHunk(&IPSFile);
-        // test.write(&fileToApplyOn);
+        Hunk toApply = Hunk::makeHunk(&IPSFile);
+        toApply.write(&fileToApplyOn);
 
-        std::cout << test << "\n";
+        std::cout << toApply << "\n";
     }
 
     return 0;
