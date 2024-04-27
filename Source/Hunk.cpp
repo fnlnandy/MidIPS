@@ -181,6 +181,11 @@ Hunk Hunk::fromDiff(BigEdian *source, BigEdian *target)
         break;
     }
 
+    if (length == 0 && count == 0)
+    {
+        delete diffBytes;
+        diffBytes = nullptr;
+    }
     return Hunk(offset, length, count, diffBytes);
 }
 
@@ -191,6 +196,7 @@ std::ostream &operator<<(std::ostream &out, Hunk &hunk)
     std::string countAsString = {""};
     std::string bytesAsString = {""};
     char hexBuffer[10];
+    std::vector<u8> *bytesData = hunk.bytes();
 
     //! Formatting to be 'readable', there's surely a better way,
     //! but this one works just fine.
@@ -201,7 +207,11 @@ std::ostream &operator<<(std::ostream &out, Hunk &hunk)
     sprintf(hexBuffer, "0x%X", hunk.count());
     countAsString = hexBuffer;
 
-    if (hunk.length() == 0)
+    if (bytesData == nullptr)
+    {
+        bytesAsString = "{}";
+    }
+    else if (hunk.length() == 0)
     {
         sprintf(hexBuffer, "0x%X", *(hunk.bytes()->data()));
         bytesAsString = hexBuffer;
