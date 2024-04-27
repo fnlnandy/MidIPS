@@ -10,6 +10,7 @@
 // Translates to "PATCH", this doesn't work if it is directly
 // initalized as such though.
 const u8 gMagicHeader[] = {0x50, 0x41, 0x54, 0x43, 0x48};
+const size_t gMagicHeaderLength = ARRAY_COUNT(gMagicHeader);
 
 static bool areBytesEqual(const u8 *bytes1, const u8 *bytes2, const size_t &length)
 {
@@ -67,6 +68,21 @@ static int createIPSPatch(const std::vector<std::string> *args)
     if (outputFileName.empty())
         FATAL_ERROR("Empty -o argument provided.");
 
+    BigEdian sourceFile = {sourceFileName, "rb"};
+    BigEdian targetFile = {targetFileName, "rb"};
+    BigEdian outputFile = {outputFileName, "wb"};
+
+    // Mandatory header for the IPS File
+    outputFile.writeBytes(gMagicHeader, gMagicHeaderLength);
+
+    while (!sourceFile.isEnd() && !targetFile.isEnd())
+    {
+        Hunk diffHunk = Hunk::fromDiff(&sourceFile, &targetFile);
+
+        // diffHunk.asIPS(&outputFile);
+        std::cout << diffHunk << "\n";
+    }
+
     return 0;
 }
 
@@ -80,12 +96,10 @@ static int applyIPSPatch(const std::vector<std::string> *args)
     if (fileToApplyOnFileName.empty())
         FATAL_ERROR("Empty -a argument provided.");
 
-    const size_t magicHeaderSize = ARRAY_COUNT(gMagicHeader);
-
     BigEdian IPSFile = {IPSFileName, "rb"};
     BigEdian fileToApplyOn = {fileToApplyOnFileName, "r+b"};
 
-    if (!areBytesEqual(IPSFile.readBytes(magicHeaderSize), gMagicHeader, magicHeaderSize))
+    if (!areBytesEqual(IPSFile.readBytes(gMagicHeaderLength), gMagicHeader, gMagicHeaderLength))
         FATAL_ERROR("The passed file is not a valid IPS Patch.");
 
     while (!IPSFile.isEnd())
