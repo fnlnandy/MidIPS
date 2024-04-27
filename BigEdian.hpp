@@ -2,12 +2,14 @@
 #define GUARD_BIG_EDIAN_HPP
 
 #include <cstdio>
+#include <cstdlib>
 #include "Types.hpp"
 
 class BigEdian
 {
 private:
     std::FILE *_fileBuffer;
+    size_t _size;
 
 public:
     BigEdian(std::FILE *file);
@@ -23,6 +25,8 @@ public:
     void writeU24(const u32 &toWrite);
     void writeU32(const u32 &toWrite);
     void flush();
+    void seek(const size_t offset);
+    size_t size();
     bool isEnd();
 };
 

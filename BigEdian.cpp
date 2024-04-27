@@ -7,6 +7,9 @@ BigEdian::BigEdian(std::FILE *file)
         FATAL_ERROR("Trying to pass NULL to BigEdian().");
 
     _fileBuffer = file;
+    fseek(_fileBuffer, 0, SEEK_END);
+    _size = ftell(_fileBuffer);
+    rewind(_fileBuffer);
 }
 
 BigEdian::~BigEdian()
@@ -93,6 +96,16 @@ void BigEdian::writeU32(const u32 &toWrite)
 void BigEdian::flush()
 {
     fflush(_fileBuffer);
+}
+
+void BigEdian::seek(const size_t offset)
+{
+    fseek(_fileBuffer, offset, SEEK_SET);
+}
+
+size_t BigEdian::size()
+{
+    return _size;
 }
 
 bool BigEdian::isEnd()
