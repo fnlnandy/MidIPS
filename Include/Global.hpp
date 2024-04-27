@@ -11,4 +11,9 @@
 
 #define BITS_IN(dataType) (sizeof(dataType) * 8)
 
+#define DEBUG(msg)                \
+    {                             \
+        std::cout << msg << "\n"; \
+    }
+
 #endif // GUARD_GLOBAL_HPP
