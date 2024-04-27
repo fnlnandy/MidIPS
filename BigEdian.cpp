@@ -1,9 +1,10 @@
+#include "Global.hpp"
 #include "BigEdian.hpp"
 
 BigEdian::BigEdian(std::FILE *file)
 {
     if (file == NULL)
-        throw "Trying to pass NULL to BigEdian().";
+        FATAL_ERROR("Trying to pass NULL to BigEdian().");
 
     _fileBuffer = file;
 }
