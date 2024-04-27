@@ -71,7 +71,9 @@ u32 BigEdian::readU32()
 
 void BigEdian::writeU8(const u8 &toWrite)
 {
+    DEBUG(__PRETTY_FUNCTION__ << " : " << (unsigned int)toWrite);
     _fileBuffer.put(toWrite);
+    _fileBuffer.flush();
 }
 
 void BigEdian::writeBytes(const u8 *toWrite, const size_t &length)
@@ -84,20 +86,35 @@ void BigEdian::writeBytes(const u8 *toWrite, const size_t &length)
 
 void BigEdian::writeU16(const u16 &toWrite)
 {
-    writeU8(toWrite >> BITS_IN(u8));
-    writeU8(toWrite & BITS_IN(u8));
+    DEBUG(__PRETTY_FUNCTION__ << " : " << toWrite);
+
+    u8 hi = (toWrite >> BITS_IN(u8));
+    u8 lo = (toWrite);
+
+    writeU8(hi);
+    writeU8(lo);
 }
 
 void BigEdian::writeU24(const u32 &toWrite)
 {
-    writeU16(toWrite >> BITS_IN(u8));
-    writeU8(toWrite & BITS_IN(u8));
+    DEBUG(__PRETTY_FUNCTION__ << " : " << toWrite);
+
+    u16 hi = (toWrite >> BITS_IN(u8));
+    u8 lo = (toWrite);
+
+    writeU16(hi);
+    writeU8(lo);
 }
 
 void BigEdian::writeU32(const u32 &toWrite)
 {
-    writeU16(toWrite >> BITS_IN(u16));
-    writeU16(toWrite & BITS_IN(u16));
+    DEBUG(__PRETTY_FUNCTION__ << " : " << toWrite);
+
+    u16 hi = (toWrite >> BITS_IN(u16));
+    u16 lo = (toWrite);
+
+    writeU16(hi);
+    writeU16(lo);
 }
 
 void BigEdian::flush()
