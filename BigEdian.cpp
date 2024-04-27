@@ -19,7 +19,7 @@ BigEdian::~BigEdian()
 
 u8 BigEdian::readU8()
 {
-    if (feof(_fileBuffer))
+    if (isEnd())
         return 0x00;
 
     return fgetc(_fileBuffer);
@@ -110,5 +110,10 @@ size_t BigEdian::size()
 
 bool BigEdian::isEnd()
 {
-    return (feof(_fileBuffer) == 1);
+    int currPos = ftell(_fileBuffer);
+
+    if (currPos == -1)
+        return true;
+
+    return (static_cast<size_t>(currPos) >= _size);
 }
