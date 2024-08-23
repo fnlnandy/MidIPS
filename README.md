@@ -1,6 +1,6 @@
 # MidIPS
 `MidIPS` is a mid IPS patcher made in C++ for fun.
-The IPS format is "explained" in [FORMAT.md](FORMAT.md), the explanation was provided by [justsolve.archiveteam.org](justsolve.archiveteam.org/wiki/IPS_(binary_patch_format)).
+The IPS format is "explained" in [FORMAT.md](FORMAT.md), the explanation was provided by [justsolve.archiveteam.org](http://justsolve.archiveteam.org/wiki/IPS_(binary_patch_format)).
 
 # Usage
 The program has two modes that you can pass to it using `-m`, here's the list:
