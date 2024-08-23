@@ -9,10 +9,10 @@
 class Hunk
 {
 private:
-    u32 _offset;
-    u16 _length;
-    u16 _count;
-    std::vector<u8> *_bytes;
+    u32 m_offset;
+    u16 m_length;
+    u16 m_count;
+    std::vector<u8> *m_bytes;
 
 public:
     Hunk(const u32 offset, const u16 length, const u16 count, std::vector<u8> *bytes);

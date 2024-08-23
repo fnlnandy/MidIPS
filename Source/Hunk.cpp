@@ -14,10 +14,10 @@
  */
 Hunk::Hunk(const u32 offset, const u16 length, const u16 count, std::vector<u8> *bytes)
 {
-    _offset = offset;
-    _length = length;
-    _count = count;
-    _bytes = bytes;
+    m_offset = offset;
+    m_length = length;
+    m_count = count;
+    m_bytes = bytes;
 }
 
 /**
@@ -30,10 +30,10 @@ Hunk::Hunk(Hunk &hunk)
     *this = hunk;
 
     // If it isn't a self assignment, we can
-    // set the hunk's _bytes to nullptr so that
+    // set the hunk's m_bytes to nullptr so that
     // it doesn't delete this object's by 'accident'.
     if (&hunk != this)
-        hunk._bytes = nullptr;
+        hunk.m_bytes = nullptr;
 }
 
 /**
@@ -47,7 +47,7 @@ Hunk::Hunk(Hunk &&hunk)
 
     // Same thing as above.
     if (&hunk != this)
-        hunk._bytes = nullptr;
+        hunk.m_bytes = nullptr;
 }
 
 /**
@@ -55,7 +55,7 @@ Hunk::Hunk(Hunk &&hunk)
  */
 Hunk::~Hunk()
 {
-    delete _bytes;
+    delete m_bytes;
 }
 
 /**
@@ -69,10 +69,10 @@ Hunk &Hunk::operator=(const Hunk &source)
     if (&source == this)
         return *this;
 
-    _offset = source.offset();
-    _length = source.length();
-    _count = source.count();
-    _bytes = source.bytes();
+    m_offset = source.offset();
+    m_length = source.length();
+    m_count = source.count();
+    m_bytes = source.bytes();
     return *this;
 }
 
@@ -83,7 +83,7 @@ Hunk &Hunk::operator=(const Hunk &source)
  */
 u32 Hunk::offset() const
 {
-    return _offset;
+    return m_offset;
 }
 
 /**
@@ -92,7 +92,7 @@ u32 Hunk::offset() const
  */
 u16 Hunk::length() const
 {
-    return _length;
+    return m_length;
 }
 
 /**
@@ -102,7 +102,7 @@ u16 Hunk::length() const
  */
 u16 Hunk::count() const
 {
-    return _count;
+    return m_count;
 }
 
 /**
@@ -111,7 +111,7 @@ u16 Hunk::count() const
  */
 std::vector<u8> *Hunk::bytes() const
 {
-    return _bytes;
+    return m_bytes;
 }
 
 /**
@@ -126,42 +126,42 @@ std::vector<u8> *Hunk::bytes() const
  */
 void Hunk::write(BigEdian *destination)
 {
-    if (_offset >= destination->size())
+    if (m_offset >= destination->size())
     {
         char offsetBuf[10];
         char destSize[10];
 
-        sprintf(offsetBuf, "0x%X", _offset);
+        sprintf(offsetBuf, "0x%X", m_offset);
         sprintf(destSize, "0x%lX", destination->size());
 
         FATAL_ERROR("Specified offset: " << offsetBuf << " is bigger than file size: " << destSize << ".");
     }
-    if ((_length == 0 && _count == 0) || _bytes == nullptr)
+    if ((m_length == 0 && m_count == 0) || m_bytes == nullptr)
         return;
     // Superior to 16 MB.
-    if (_offset > U24_MAX)
+    if (m_offset > U24_MAX)
     {
         INFO("The patch *will not* consider data after 0xFFFFFF, skipping.");
         return;
     }
 
-    destination->seek(_offset);
+    destination->seek(m_offset);
 
     // It isn't RLE.
-    if (_length > 0)
+    if (m_length > 0)
     {
-        destination->writeBytes(_bytes->data(), _length);
+        destination->writeBytes(m_bytes->data(), m_length);
         return;
     }
 
     // It is RLE, so we iteratively
     // write the same byte over and over.
-    u8 *toWrite = new u8[_count];
+    u8 *toWrite = new u8[m_count];
 
-    for (size_t i = 0; i < _count; i++)
-        toWrite[i] = _bytes->at(0);
+    for (size_t i = 0; i < m_count; i++)
+        toWrite[i] = m_bytes->at(0);
 
-    destination->writeBytes(toWrite, _count);
+    destination->writeBytes(toWrite, m_count);
 }
 
 /**
@@ -172,27 +172,27 @@ void Hunk::write(BigEdian *destination)
  */
 void Hunk::asIPS(BigEdian *destination)
 {
-    if ((_length == 0 && _count == 0) || _bytes == nullptr)
+    if ((m_length == 0 && m_count == 0) || m_bytes == nullptr)
         return;
     // Superior to 16 MB.
-    if (_offset > U24_MAX)
+    if (m_offset > U24_MAX)
     {
         INFO("The patch *will not* consider data after 0xFFFFFF, skipping.");
         return;
     }
 
-    destination->writeU24(_offset);
-    destination->writeU16(_length);
+    destination->writeU24(m_offset);
+    destination->writeU16(m_length);
 
     // It is RLE.
-    if (_length == 0)
+    if (m_length == 0)
     {
-        destination->writeU16(_count);
-        destination->writeU8(_bytes->at(0));
+        destination->writeU16(m_count);
+        destination->writeU8(m_bytes->at(0));
     }
     else
     {
-        destination->writeBytes(_bytes->data(), _length);
+        destination->writeBytes(m_bytes->data(), m_length);
     }
 }
 

@@ -8,9 +8,9 @@
 class BigEdian
 {
 private:
-    std::fstream _fileBuffer;
-    std::string _fileName;
-    size_t _size;
+    std::fstream m_fileBuffer;
+    std::string m_fileName;
+    size_t m_size;
 
 public:
     BigEdian(const std::string &fileName, const std::ios_base::openmode &mode);

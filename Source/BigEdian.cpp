@@ -10,21 +10,21 @@
  */
 BigEdian::BigEdian(const std::string &fileName, const std::ios_base::openmode &mode)
 {
-    _fileBuffer.open(fileName, mode);
+    m_fileBuffer.open(fileName, mode);
 
-    if (!_fileBuffer.is_open())
+    if (!m_fileBuffer.is_open())
         FATAL_ERROR("Unable to open '" << fileName << "' for reading.");
 
-    _fileName = fileName;
-    _fileBuffer.seekg(0, std::ios::end);
+    m_fileName = fileName;
+    m_fileBuffer.seekg(0, std::ios::end);
 
     // If the seeking failed for whatever reason.
-    if (_fileBuffer.fail())
+    if (m_fileBuffer.fail())
         FATAL_ERROR("Errors occurred while reading '" << fileName << "'.");
 
-    _size = _fileBuffer.tellg();
-    _fileBuffer.clear(); // Clearing any flag that could've been set.
-    _fileBuffer.seekg(0, std::ios::beg);
+    m_size = m_fileBuffer.tellg();
+    m_fileBuffer.clear(); // Clearing any flag that could've been set.
+    m_fileBuffer.seekg(0, std::ios::beg);
 }
 
 /**
@@ -32,7 +32,7 @@ BigEdian::BigEdian(const std::string &fileName, const std::ios_base::openmode &m
  */
 BigEdian::~BigEdian()
 {
-    _fileBuffer.close();
+    m_fileBuffer.close();
 }
 
 /**
@@ -44,9 +44,9 @@ BigEdian::~BigEdian()
 u8 BigEdian::readU8()
 {
     if (isEnd())
-        FATAL_ERROR("Reached end of file: '" << _fileName << "'.");
+        FATAL_ERROR("Reached end of file: '" << m_fileName << "'.");
 
-    return _fileBuffer.get();
+    return m_fileBuffer.get();
 }
 
 /**
@@ -119,8 +119,8 @@ u32 BigEdian::readU32()
  */
 void BigEdian::writeU8(const u8 &toWrite)
 {
-    _fileBuffer.put(toWrite);
-    _fileBuffer.flush();
+    m_fileBuffer.put(toWrite);
+    m_fileBuffer.flush();
 }
 
 /**
@@ -191,7 +191,7 @@ void BigEdian::writeU32(const u32 &toWrite)
  */
 void BigEdian::flush()
 {
-    _fileBuffer.flush();
+    m_fileBuffer.flush();
 }
 
 /**
@@ -201,8 +201,8 @@ void BigEdian::flush()
  */
 void BigEdian::seek(const size_t offset)
 {
-    _fileBuffer.seekg(offset, std::ios::beg);
-    _fileBuffer.seekp(offset, std::ios::beg);
+    m_fileBuffer.seekg(offset, std::ios::beg);
+    m_fileBuffer.seekp(offset, std::ios::beg);
 }
 
 /**
@@ -215,7 +215,7 @@ void BigEdian::seek(const size_t offset)
  */
 size_t BigEdian::tell()
 {
-    return _fileBuffer.tellg();
+    return m_fileBuffer.tellg();
 }
 
 /**
@@ -225,7 +225,7 @@ size_t BigEdian::tell()
  */
 size_t BigEdian::size()
 {
-    return _size;
+    return m_size;
 }
 
 /**
@@ -236,5 +236,5 @@ size_t BigEdian::size()
  */
 bool BigEdian::isEnd()
 {
-    return _fileBuffer.eof();
+    return m_fileBuffer.eof();
 }
