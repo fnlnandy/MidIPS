@@ -76,7 +76,7 @@ static std::vector<std::string> *parseArgs(int argc, char **argv)
  *
  * @example `-Iinclude` and `-I include` will both return include.
  */
-static std::string getArg(const std::vector<std::string> *args, const std::string &prefix)
+static std::string getArg(const std::vector<std::string> *args, const std::string &prefix, bool isEmpty = false)
 {
     for (size_t i = 0, max = args->size(); i < max; i++)
     {
@@ -86,9 +86,13 @@ static std::string getArg(const std::vector<std::string> *args, const std::strin
         //! It does not hold the prefix at all.
         if (current.find(prefix) != 0)
             continue;
+        // This argument does NOT expect a paremeter,
+        // so we just return it.
+        if (isEmpty && current == prefix)
+            return prefix;
         // It's wide enough to hold the parameter with it.
-        if (current.length() > prefixLength)
-            return current.substr(prefixLength);
+        if (current.length() > prefixLength + 1 && current[prefixLength] == '=')
+            return current.substr(prefixLength + 1);
         // It wasn't wide enough, so we assume it's the next
         // argument.
         if (i + 1 < max)
@@ -133,6 +137,7 @@ static int createIPSPatch(const std::vector<std::string> *args)
     const std::string targetFileName = getArg(args, "-t");
     const std::string outputFileName = getArg(args, "-o");
     const std::string logFileName = getArg(args, "-l");
+    const bool allowAboveU24 = getArg(args, "--allow-above-u24", true) == "--alow-above-u24";
     std::ofstream logFile = std::ofstream(logFileName);
 
     // If there were missing parameters.
@@ -155,7 +160,7 @@ static int createIPSPatch(const std::vector<std::string> *args)
     while (!sourceFile.isEnd() && !targetFile.isEnd())
     {
         Hunk diffHunk = Hunk::fromDiff(&sourceFile, &targetFile);
-        diffHunk.asIPS(&outputFile);
+        diffHunk.asIPS(&outputFile, allowAboveU24);
 
         logHunk(diffHunk, logFile);
     }
@@ -180,6 +185,7 @@ static int applyIPSPatch(const std::vector<std::string> *args)
     const std::string IPSFileName = getArg(args, "-p");
     const std::string fileToApplyOnFileName = getArg(args, "-a");
     const std::string logFileName = getArg(args, "-l");
+    const bool allowAboveU24 = getArg(args, "--allow-above-u24", true) == "--allow-above-u24";
     std::ofstream logFile = std::ofstream(logFileName);
 
     // Missing parameters.
@@ -200,7 +206,7 @@ static int applyIPSPatch(const std::vector<std::string> *args)
     while (!IPSFile.isEnd())
     {
         Hunk toApply = Hunk::fromIPS(&IPSFile);
-        toApply.write(&fileToApplyOn);
+        toApply.write(&fileToApplyOn, allowAboveU24);
 
         logHunk(toApply, logFile);
     }

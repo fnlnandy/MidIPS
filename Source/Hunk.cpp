@@ -124,7 +124,7 @@ std::vector<u8> *Hunk::bytes() const
  *
  * @todo Delete toWrite at the end of the function.
  */
-void Hunk::write(BigEdian *destination)
+void Hunk::write(BigEdian *destination, bool allowAboveU24)
 {
     if (m_offset >= destination->size())
     {
@@ -139,7 +139,7 @@ void Hunk::write(BigEdian *destination)
     if ((m_length == 0 && m_count == 0) || m_bytes == nullptr)
         return;
     // Superior to 16 MB.
-    if (m_offset > U24_MAX)
+    if (!allowAboveU24 && m_offset > U24_MAX)
     {
         INFO("The patch *will not* consider data after 0xFFFFFF, skipping.");
         return;
@@ -170,12 +170,12 @@ void Hunk::write(BigEdian *destination)
  * @brief Writes the Hunk as IPS into
  * destination.
  */
-void Hunk::asIPS(BigEdian *destination)
+void Hunk::asIPS(BigEdian *destination, bool allowAboveU24)
 {
     if ((m_length == 0 && m_count == 0) || m_bytes == nullptr)
         return;
     // Superior to 16 MB.
-    if (m_offset > U24_MAX)
+    if (!allowAboveU24 && m_offset > U24_MAX)
     {
         INFO("The patch *will not* consider data after 0xFFFFFF, skipping.");
         return;

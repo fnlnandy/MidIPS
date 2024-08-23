@@ -26,8 +26,8 @@ public:
     u16 count() const;
     std::vector<u8> *bytes() const;
 
-    void write(BigEdian *destination);
-    void asIPS(BigEdian *destination);
+    void write(BigEdian *destination, bool allowAboveU24);
+    void asIPS(BigEdian *destination, bool allowAboveU24);
     static Hunk fromIPS(BigEdian *ipsParser);
     static Hunk fromDiff(BigEdian *source, BigEdian *target);
 };
