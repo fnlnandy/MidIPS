@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Global.hpp"
+#include "MidIPS.hpp"
 #include "BigEdian.hpp"
 #include "Hunk.hpp"
 
@@ -187,7 +187,7 @@ static int applyIPSPatch(const std::vector<std::string> *args)
  */
 static int printUsage()
 {
-    std::printf("Usage: ipspatcher -m=[apply|a]|[create|c] [-p=PATCH] [-a=FILE] [-c=SOURCE] [-t=TARGET] [-o=OUTPUT PATCH]\n");
+    std::printf("Usage: midips -m=[apply|a]|[create|c] [-p=PATCH] [-a=FILE] [-c=SOURCE] [-t=TARGET] [-o=OUTPUT PATCH]\n");
     return 0;
 }
 

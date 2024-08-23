@@ -1,4 +1,4 @@
-#include "Global.hpp"
+#include "MidIPS.hpp"
 #include "Hunk.hpp"
 
 /**
