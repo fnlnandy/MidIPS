@@ -1,56 +1,40 @@
-# IPS Patcher in CPP
-Some random IPS patcher made in C++ *for fun*.
-
-For the explanation of the IPS format, check out [FORMAT.md](FORMAT.md); thanks to [justsolve.archiveteam.org](justsolve.archiveteam.org/wiki/IPS_(binary_patch_format)).
+# MidIPS
+`MidIPS` is a mid IPS patcher made in C++ for fun.
+The IPS format is "explained" in [FORMAT.md](FORMAT.md), the explanation was provided by [justsolve.archiveteam.org](justsolve.archiveteam.org/wiki/IPS_(binary_patch_format)).
 
 # Usage
-The program has a few arguments you can pass to it, like:
+The program has two modes that you can pass to it using `-m`, here's the list:
+|Argument|Mode|
+|--------|----|
+|-m=c|Creation of an IPS patch|
+|-m=a|Application an IPS patch|
 
-`-m`: Specifies the mode of the program.
-- `apply`/`a` to apply an IPS patch.
-- `create`/`c` to create an IPS patch.
+## Creation mode
+When in creation mode, those arguments are expected:
+- `-c` (mandatory): Specifies the source file.
+- `-t` (mandatory): Specifies the target file.
+- `-l` (optional): Allows to output the logs in a file instead of to `stdout`.
+- `--allow-above-u24` (optional): Allows to override the `0xFFFFFF` limit.
 
-`-p`: Specifies the patch to apply.
-- Only works in `apply`/`a` mode.
-- Expects a filename.
-
-`-a`: Specifies the file on which the patch will be applied.
-- Only works in `apply`/`a` mode.
-- Expects a filename.
-
-`-c`: Specifies the source file for a patch.
-- Only works in `create`/`c` mode.
-- Expects a filename.
-
-`-t`: Specifies the target file for a patch.
-- Only works in `create`/`c` mode.
-- Expects a filename.
-- Changes in this file will be the ones *in the patch*.
-
-`-o`: Specifies the ouput IPS file.
-- Only works in `create`/`c` mode.
-- Expects a filename.
-- Will create the file or will wipe all its content if it exists already.
-- All the spotted differences until the **cap of 16 MB** between the `source` and `target` files will be written in it.
-
+## Application mode
+When in application mode, those arguments are expected:
+- `-p` (mandatory): Specifies the patch to apply.
+- `-a` (mandatory): Specifies the subject file.
+- `-l` (optional): Allows to output the logs in a file instead of to `stdout`.
+- `--allow-above-u24` (optional): Allows to override the `0xFFFFFF` limit.
 
 # Compiling
-## Windows
-I haven't tested *yet*, but you could *supposedly* just run:
-```shell
-$ make
-```
+Prerequisites:
+- On Windows, you would probably download `msys2`.
+- A `C++11` capable compiler, just make sure to update the correct [Makefile line](Makefile#L7). Also note that `g++` is used for linking.
+- GNU `make`.
 
-Assuming you have `make` in your `$PATH` environment variable, as well as `g++`.
-
-## Linux
-Should be the same process as on Windows, run:
+Now, if everything is set up correctly, you should able to run:
 ```shell
 $ make -j$(nproc)
 ```
 
-# Notes
-In case you make changes to the headers (they aren't dependencies to the targets), first run these commands before rebuilding:
+To clean the projet, e.g. because you've changed a header file, just run:
 ```shell
 $ make clean -j$(nproc)
 ```
