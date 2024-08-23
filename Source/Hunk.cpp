@@ -202,9 +202,9 @@ void Hunk::asIPS(BigEdian *destination, bool allowAboveU24)
  * @brief Tries to parse a Hunk from
  * an IPS File.
  */
-Hunk Hunk::fromIPS(BigEdian *ipsParser)
+Hunk Hunk::fromIPS(BigEdian *ipsParser, bool allowAboveU24)
 {
-    u32 offset = ipsParser->readU24();
+    u32 offset = allowAboveU24 ? ipsParser->readU32() : ipsParser->readU24();
     u16 length = ipsParser->readU16();
     u16 count = 0;
     std::vector<u8> *bytes = new std::vector<u8>();

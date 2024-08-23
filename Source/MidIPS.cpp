@@ -205,7 +205,7 @@ static int applyIPSPatch(const std::vector<std::string> *args)
     // unexpectedly encounter it.
     while (!IPSFile.isEnd())
     {
-        Hunk toApply = Hunk::fromIPS(&IPSFile);
+        Hunk toApply = Hunk::fromIPS(&IPSFile, allowAboveU24);
         toApply.write(&fileToApplyOn, allowAboveU24);
 
         logHunk(toApply, logFile);
