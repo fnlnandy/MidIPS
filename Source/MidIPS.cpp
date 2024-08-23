@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <cstring>
 #include <string>
 #include <vector>
 #include "MidIPS.hpp"
@@ -7,6 +9,9 @@
 
 //! @brief Computes the size of an array within the scope.
 #define ARRAY_COUNT(x) (sizeof(x) / sizeof(x)[0])
+
+//! @brief Computes the max length of a char* buffer.
+#define MAX_BUFFER_LENGTH 500
 
 //! @brief Base header for every IPS patch, translates literally to "PATCH".
 const u8 gMagicHeader[] = {0x50, 0x41, 0x54, 0x43, 0x48};
@@ -93,6 +98,26 @@ static std::string getArg(const std::vector<std::string> *args, const std::strin
     return {""};
 }
 
+static void logHunk(const Hunk &hunk, std::ofstream &maybeOut)
+{
+    char logBuffer[MAX_BUFFER_LENGTH] = {0};
+
+    if (hunk.bytes() == nullptr)
+        return;
+
+    std::snprintf(logBuffer, MAX_BUFFER_LENGTH, "Offset: %X\tSize: %lX\n", hunk.offset(), hunk.bytes()->size());
+
+    if (maybeOut.is_open())
+    {
+        maybeOut.write(logBuffer, std::strlen(logBuffer));
+        maybeOut.flush();
+    }
+    else
+    {
+        std::printf("%s", logBuffer);
+    }
+}
+
 /**
  * @param args
  *
@@ -107,6 +132,8 @@ static int createIPSPatch(const std::vector<std::string> *args)
     const std::string sourceFileName = getArg(args, "-c");
     const std::string targetFileName = getArg(args, "-t");
     const std::string outputFileName = getArg(args, "-o");
+    const std::string logFileName = getArg(args, "-l");
+    std::ofstream logFile = std::ofstream(logFileName);
 
     // If there were missing parameters.
     if (sourceFileName.empty())
@@ -128,13 +155,14 @@ static int createIPSPatch(const std::vector<std::string> *args)
     while (!sourceFile.isEnd() && !targetFile.isEnd())
     {
         Hunk diffHunk = Hunk::fromDiff(&sourceFile, &targetFile);
-
         diffHunk.asIPS(&outputFile);
-        std::cout << diffHunk << "\n";
+
+        logHunk(diffHunk, logFile);
     }
 
     // Making sure the changes are actually written.
     outputFile.flush();
+    logFile.close();
     return 0;
 }
 
@@ -151,6 +179,8 @@ static int applyIPSPatch(const std::vector<std::string> *args)
 {
     const std::string IPSFileName = getArg(args, "-p");
     const std::string fileToApplyOnFileName = getArg(args, "-a");
+    const std::string logFileName = getArg(args, "-l");
+    std::ofstream logFile = std::ofstream(logFileName);
 
     // Missing parameters.
     if (IPSFileName.empty())
@@ -172,9 +202,10 @@ static int applyIPSPatch(const std::vector<std::string> *args)
         Hunk toApply = Hunk::fromIPS(&IPSFile);
         toApply.write(&fileToApplyOn);
 
-        std::cout << toApply << "\n";
+        logHunk(toApply, logFile);
     }
 
+    logFile.close();
     return 0;
 }
 
